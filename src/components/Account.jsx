@@ -25,11 +25,13 @@ function Account(token) {
           headers: {
             // headers are used to set the content type and authorization
             "Content-Type": "application/json", // content type is set to application/json
-            Authorization: `Bearer ${token}`, // authorization is set to Bearer token
+            "Authorization": `Bearer ${token}`, // authorization is set to Bearer token
           }, // end of headers
         }); // end of fetch
+        const info = await response.json();
         setAccount(response.data);// set account data to the response data
-        console.log(account);
+        console.log("info:",info);
+        console.log("account:",account);
       } catch (error) {
         // catch block is used to handle errors
         setError("Failed to fetch account data"); // set error message
