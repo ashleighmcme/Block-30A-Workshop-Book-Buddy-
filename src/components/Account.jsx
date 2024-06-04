@@ -4,12 +4,12 @@ You may consider conditionally rendering a message for other users that prompts 
 
 import React, { useState, useEffect } from "react";
 
-function Account() {
+function Account(token) {
   const [account, setAccount] = useState(null); // account is an object
   const [loading, setLoading] = useState(true); // loading is a boolean
   const [error, setError] = useState(null); // error is a string
   const API_URL =
-    "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api/users/me"; // API_URL is a string
+      "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api"; // API_URL is a string
 
   useEffect(() => {
     // useEffect hook is used to fetch account data from the API
@@ -17,8 +17,9 @@ function Account() {
       // fetchAccount is an async function
       try {
         // try block is used to handle errors
-        const token = ""; // token is an empty string
-        const response = await fetch(API_URL, {
+        const token = sessionStorage.getItem('token');
+        console.log("token:",token);
+        const response = await fetch(`${API_URL}/users/me`, {
           // fetch account data from the API
 
           headers: {
@@ -27,7 +28,8 @@ function Account() {
             Authorization: `Bearer ${token}`, // authorization is set to Bearer token
           }, // end of headers
         }); // end of fetch
-        setAccount(response.data); // set account data to the response data
+        setAccount(response.data);// set account data to the response data
+        console.log(account);
       } catch (error) {
         // catch block is used to handle errors
         setError("Failed to fetch account data"); // set error message
@@ -41,36 +43,36 @@ function Account() {
 
   // render account details
   return (
-    <div className="account">
-      {/* display loading message */}
-      {loading && <p>Loading...</p>}
-      {/* display error message */}
-      {error && <p>{error}</p>}
-      {/*  display account details */}
-      {account && (
-        <div>
-          <h2>Account Details</h2>
-          <p>ID: {account.ID}</p>
-          <p>Username: {account.username}</p>
-          <p>Email: {account.email}</p>
-          {account.books &&
-            account.books.length > 0 && ( // check if user has books
-              <div>
-                <h3>Books</h3>
-                <ul>
-                  {account.books.map(
-                    (
-                      book // display user's books
-                    ) => (
-                      <li key={book.ID}>{book.title}</li>
-                    )
+      <div className="account">
+        {/* display loading message */}
+        {loading && <p>Loading...</p>}
+        {/* display error message */}
+        {error && <p>{error}</p>}
+        {/*  display account details */}
+        {account && (
+            <div>
+              <h2>Account Details</h2>
+              <p>ID: {account.ID}</p>
+              <p>Username: {account.username}</p>
+              <p>Email: {account.email}</p>
+              {account.books &&
+                  account.books.length > 0 && ( // check if user has books
+                      <div>
+                        <h3>Books</h3>
+                        <ul>
+                          {account.books.map(
+                              (
+                                  book // display user's books
+                              ) => (
+                                  <li key={book.ID}>{book.title}</li>
+                              )
+                          )}
+                        </ul>
+                      </div>
                   )}
-                </ul>
-              </div>
-            )}
-        </div>
-      )}
-    </div>
+            </div>
+        )}
+      </div>
   );
 }
 
