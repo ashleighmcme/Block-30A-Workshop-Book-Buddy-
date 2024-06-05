@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 export default function SingleBook({book}) {
     const [showDetails, setShowDetails] = useState(false);
     const token = sessionStorage.getItem("token");
-    console.log("token in single book:",token);
 
     const navigate = useNavigate();
     const goToAccounts=()=>{

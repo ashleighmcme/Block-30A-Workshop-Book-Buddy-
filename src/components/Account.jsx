@@ -17,7 +17,6 @@ function Account() {
       try {
         // try block is used to handle errors
         const token = sessionStorage.getItem("token");
-        console.log("token:", token);
         const response = await fetch(`${API_URL}/users/me`, {
           // fetch account data from the API
 

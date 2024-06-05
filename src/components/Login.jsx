@@ -26,7 +26,6 @@ const Login = () => {
         const data = await response.json();
         setLogin(true);
         sessionStorage.setItem('token', data.token);
-        console.log("data:",data.token);
       } else {
         setError("Login failed");
       }
