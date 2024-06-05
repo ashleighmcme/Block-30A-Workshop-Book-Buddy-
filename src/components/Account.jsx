@@ -1,81 +1,74 @@
-/* TODO - add your code to create a functional React component that renders account details for a logged in user. 
-Fetch the account data from the provided API. 
-You may consider conditionally rendering a message for other users that prompts them to log in or create an account.  */
-
 import React, { useState, useEffect } from "react";
 
 function Account(token) {
-  const [account, setAccount] = useState(null); // account is an object
-  const [loading, setLoading] = useState(true); // loading is a boolean
-  const [error, setError] = useState(null); // error is a string
-  const API_URL =
-      "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api"; // API_URL is a string
+  const [account, setAccount] = useState(null); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const API_URL = "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api"; // API_URL is a string
 
   useEffect(() => {
-    // useEffect hook is used to fetch account data from the API
+    
     const fetchAccount = async () => {
-      // fetchAccount is an async function
+      
       try {
-        // try block is used to handle errors
-        const token = sessionStorage.getItem('token');
-        console.log("token:",token);
+        
+        const token = sessionStorage.getItem("token");
+        console.log("token:", token);
         const response = await fetch(`${API_URL}/users/me`, {
-          // fetch account data from the API
+          
 
           headers: {
-            // headers are used to set the content type and authorization
-            "Content-Type": "application/json", // content type is set to application/json
-            "Authorization": `Bearer ${token}`, // authorization is set to Bearer token
-          }, // end of headers
-        }); // end of fetch
+            
+            "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}`, 
+          }, 
+        }); 
         const info = await response.json();
-        setAccount(response.data);// set account data to the response data
-        console.log("info:",info);
-        console.log("account:",account);
+        setAccount(response.data); 
+        console.log("info:", info);
+        console.log("account:", account);
       } catch (error) {
-        // catch block is used to handle errors
-        setError("Failed to fetch account data"); // set error message
+        
+        setError("Failed to fetch account data"); 
       } finally {
-        // finally block is used to set loading to false
-        setLoading(false); // set loading to false
-      } // end of finally
-    }; // end of fetchAccount
-    fetchAccount(); // call fetchAccount function
-  }, []); // end of useEffect
+        
+        setLoading(false); 
+      } 
+    }; 
+    fetchAccount(); 
+  }, []); 
 
-  // render account details
+  
   return (
-      <div className="account">
-        {/* display loading message */}
-        {loading && <p>Loading...</p>}
-        {/* display error message */}
-        {error && <p>{error}</p>}
-        {/*  display account details */}
-        {account && (
-            <div>
-              <h2>Account Details</h2>
-              <p>ID: {account.ID}</p>
-              <p>Username: {account.username}</p>
-              <p>Email: {account.email}</p>
-              {account.books &&
-                  account.books.length > 0 && ( // check if user has books
-                      <div>
-                        <h3>Books</h3>
-                        <ul>
-                          {account.books.map(
-                              (
-                                  book // display user's books
-                              ) => (
-                                  <li key={book.ID}>{book.title}</li>
-                              )
-                          )}
-                        </ul>
-                      </div>
-                  )}
-            </div>
-        )}
-      </div>
-  );
-}
+    <div className="account">
+      {}
+      {loading && <p>Loading...</p>}
+      {}
+      {error && <p>{error}</p>}
+      {}
+      {account && (
+        <div>
+          <h2>Account Details</h2>
+          <p>ID: {account.ID}</p>
+          <p>Username: {account.username}</p>
+          <p>Email: {account.email}</p>
+          {account.books &&
+            account.books.length > 0 && ( 
+              <div>
+                <h3>Books</h3>
+                <ul>
+                  {account.books.map(
+                    (
+                      book 
+                    ) => (
+                      <li key={book.ID}>{book.title}</li>
+                    ))}
+                </ul>
+              </div>
+            ) } (
+              <p>You have no books.  Add some to your list!</p>
+            )}
+        </div>
+      
 
 export default Account;

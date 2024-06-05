@@ -36,7 +36,8 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
+    <div className="login-container">
+      <div className="login">
       <h2>Login</h2>
       {error && (
         <p
@@ -72,7 +73,8 @@ const Login = () => {
           />
         </label>
         <button type="submit">Login</button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
