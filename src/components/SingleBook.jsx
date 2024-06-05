@@ -2,30 +2,40 @@
 Fetch the book data from the provided API. 
 You may consider conditionally rendering a 'Checkout' button for logged in users. */
 import {useState} from "react";
-import BookPopup from "./BookPopup";
+import Account from "./Account";
+import { useNavigate } from "react-router-dom";
 
 export default function SingleBook({book}) {
     const [showDetails, setShowDetails] = useState(false);
-    //const [visibility,setVisibility] = useState('hidden')
-    // const [goBack, setGoBac] = useState(null);
-    //let popupContainer;
+    const token = sessionStorage.getItem("token");
+    console.log("token in single book:",token);
+
+    const navigate = useNavigate();
+    const goToAccounts=()=>{
+        navigate("/account");
+    }
+
+
     return (
         <>
             <div className="single-book">
                 <h2>{book.title}</h2>
                 <button onClick={() => {setShowDetails(!showDetails);
-                    /*BookPopup(book,!showDetails);*/
+
                 }}>
                     {showDetails ? "Hide Details" : "Show Details"}
                 </button>
                 {showDetails && (
                     <div className="popup" style={{visibility: showDetails ? 'visible' : 'hidden'}}>
 
-                            <h1>{book.title}</h1>
-                            <p>Author: {book.author}</p>
-                            <p>Description: {book.description}</p>
-                            <img src={book.coverimage} alt={book.title}/>
-                        <button id ="close-popup" onClick={() => setShowDetails(!showDetails)}>
+                        <h1>{book.title}</h1>
+                        <p>Author: {book.author}</p>
+                        <p>Description: {book.description}</p>
+                        <img src={book.coverimage} alt={book.title}/>
+                        <button id="checkout-button" style={{visibility: token ? 'visible' : 'hidden'}} onClick={()=>goToAccounts()}>
+                            Go To Account Checkout
+                        </button>
+                        <button id="close-popup" onClick={() => setShowDetails(!showDetails)}>
                             X
                         </button>
                     </div>

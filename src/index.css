@@ -236,5 +236,18 @@ button:hover {
   right: 20px;
 }
 
+#checkout-button{
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+
+.account{
+  color: #08ff00;
+  font-family: Calibri;
+  font-size: xx-large;
+  font-weight: bolder;
+  margin-left: 300px;
+}
 
 
