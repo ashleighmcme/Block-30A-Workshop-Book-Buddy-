@@ -249,5 +249,18 @@ button:hover {
   font-weight: bolder;
   margin-left: 300px;
 }
+.checked-out-books ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.checked-out-books li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
 
 

@@ -1,95 +1,99 @@
-/* TODO - add your code to create a functional React component that renders account details for a logged in user. 
-Fetch the account data from the provided API. 
-You may consider conditionally rendering a message for other users that prompts them to log in or create an account.  */
-
 import { useState, useEffect } from "react";
 
 function Account() {
-  const [account, setAccount] = useState(null); // account is an object
-  const [loading, setLoading] = useState(true); // loading is a boolean
-  const [error, setError] = useState(null); // error is a string
-  const API_URL = "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api"; // API_URL is a string
+  const [account, setAccount] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API_URL = "https://fsa-book-buddy-b6e748d1380d.herokuapp.com/api";
+  const [checkedOutBooks, setCheckedOutBooks] = useState([]);
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
-    // useEffect hook is used to fetch account data from the API
     const fetchAccount = async () => {
-      // fetchAccount is an async function
       try {
-        // try block is used to handle errors
-        const token = sessionStorage.getItem("token");
         const response = await fetch(`${API_URL}/users/me`, {
-          // fetch account data from the API
-
           headers: {
-            // headers are used to set the content type and authorization
-            "Content-Type": "application/json", // content type is set to application/json
-            Authorization: `Bearer ${token}`, // authorization is set to Bearer token
-          }, // end of headers
-        }); // end of fetch
-        const info = await response.json();
-        setAccount(info); // set account data to the response data
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          setError("Please Sign In for Account Details");
+        } else {
+          const info = await response.json();
+          setAccount(info);
+          setCheckedOutBooks(info.books);
+        }
       } catch (error) {
-        // catch block is used to handle errors
-        setError("Failed to fetch account data"); // set error message
+        setError("Failed to fetch account data");
       } finally {
-        // finally block is used to set loading to false
-        setLoading(false); // set loading to false
-      } // end of finally
-    }; // end of fetchAccount
-    fetchAccount(); // call fetchAccount function
-  }, []); // end of useEffect
+        setLoading(false);
+      }
+    };
+    fetchAccount();
+  }, [token]);
 
-  // render account details
+  const returnBook = async (reservationId) => {
+    try {
+      const response = await fetch(`${API_URL}/reservations/${reservationId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const result = await response.json();
+        setCheckedOutBooks((prevBooks) =>
+            prevBooks.filter((book) => book.id !== reservationId)
+        );
+      } else {
+        throw new Error(`Failed to return book: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error returning book:", error);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setError(null);
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [error]);
+
   return (
       <div className="account">
-        {/* display loading message */}
         {loading && (
-            <p
-                style={{
-                  color: "green",
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                }}
-            >
+            <p style={{ color: "green", fontSize: "2rem", fontWeight: "bold" }}>
               Loading...
             </p>
         )}
-        {/* display error message */}
         {error && (
-            <p
-                style={{
-                  color: "red",
-                  fontSize: "1.5rem",
-                  fontWeight: "bold",
-                }}
-            >
+            <p style={{ color: "red", fontSize: "2rem", fontWeight: "bold" }}>
               {error}
             </p>
         )}
-        {/*  display account details */}
         {account && (
-            <div className="account">
+            <div>
               <h2>Account Details</h2>
-              <p>ID: {account.id}</p>
               <p>Firstname: {account.firstname}</p>
               <p>Lastname: {account.lastname}</p>
               <p>Email: {account.email}</p>
-              <p>Books: {account.books}</p>
-              {account.books &&
-                  account.books.length > 0 && ( // check if user has books
-                      <div>
-                        <h3>Books</h3>
-                        <ul>
-                          {account.books.map(
-                              (
-                                  book // display user's books
-                              ) => (
-                                  <li key={book.ID}>{book.title}</li>
-                              )
-                          )}
-                        </ul>
-                      </div>
-                  )}
+              {checkedOutBooks.length > 0 && (
+                  <div>
+                    <h2>Checked Out Books</h2>
+                    <ul className="checked-out-books">
+                      {checkedOutBooks.map((book) => (
+                          <li key={book.id}>
+                            Title: {book.title}, Author: {book.author}, ID: {book.id}
+                            <br />
+                            <button onClick={() => returnBook(book.id)}>Return</button>
+                          </li>
+                      ))}
+                    </ul>
+                  </div>
+              )}
             </div>
         )}
       </div>
