@@ -8,3 +8,6 @@ Details on the API can be found 🔗 [here](https://fsa-book-buddy-b6e748d1380d.
 
 Deployed site can be viewed here: [
 ](https://app.netlify.com/sites/chimerical-stroopwafel-916012/deploys/666102f1e7d8b01f4561d233)
+
+Kanban can be viewed here: [
+](https://github.com/users/ashleighmcme/projects/3)
